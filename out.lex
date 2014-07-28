@@ -17,6 +17,10 @@ id
 +
 num
 ;
+id
+=
+num
+;
 printf
 (
 string

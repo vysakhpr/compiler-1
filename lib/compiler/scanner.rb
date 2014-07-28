@@ -14,8 +14,9 @@ class Number
   @value=nil
   @type=""
   @line=nil
-  def initialize(value,line)
+  def initialize(value,type,line)
     @value=value
+    @type=type
     @line=line
   end
 end
@@ -31,7 +32,9 @@ def scanner(words,file)
   $ID=[];
   $NUM=[];
   $LIT=[];
-  
+  delim=0                                                                 #
+  paran=0 
+  e=0  
   #p words
   #Scanning Phase-----------------------------------------------------------------------------------------------------------------------------------------
   
@@ -68,12 +71,12 @@ def scanner(words,file)
 
   #p words
   line=1  
- #LexicalAnazysis Phase-----------------------------------------------------------------------------------------------------------------------------------  
+ #LexicalAnalysis Phase-----------------------------------------------------------------------------------------------------------------------------------  
   for word in words
     i=0
     while i<word.length
       peek=word[i]
-      unless peek == " "
+      unless peek == " " or peek == "\t"  
   #<!---------------- Check for digit ---------------------------!>      
 
         if !(peek=~/^[0-9]$/).nil?
@@ -83,15 +86,30 @@ def scanner(words,file)
             i=i+1
             peek=word[i]
           end while !(peek=~/^[0-9]$/).nil?
-          ob=Number.new(v,line)
+          if peek == '.'                                                            #
+            x=v
+            d=10
+            while(1)
+              i=i+1
+              peek=word[i]
+              if (peek=~/^[0-9]$/).nil?
+                break
+              end
+              x=x+(peek.to_f/d);
+              d=d*10
+            end
+            ob=Number.new(x,"float",line)
+          else
+            ob=Number.new(v,"int",line)          
+          end
           #file.puts "token <num,#{ob}>"
           file.puts "num"
           $NUM<<ob
           next
-        end
+        #end
   #<!---------------- Check for Identifier/Keyword ------------------------------!> 
 
-        if !(peek=~/^[A-Za-z]$/).nil?
+        elsif !(peek=~/^[A-Za-z]$/).nil?
           b=""
           begin
             b=b+peek
@@ -115,19 +133,34 @@ def scanner(words,file)
             file.puts "id"
           end
           next
-        end
+        #end
   #<!---------------- Check for Operator ------------------------------------!>
 
-        if !(peek =~ /^[()+-;.=,\*\/\[\]{}%]$/).nil?
+        elsif !(peek =~ /^[()+-;.=,\*\/\[\]{}%]$/).nil?
+          if peek=="{"                                                    #
+            delim=delim+1
+          elsif peek=="}"
+            delim=delim-1
+          elsif peek=="("
+            paran=paran+1
+          elsif peek==")"
+            paran=paran-1
+          end
           #file.puts "token <#{peek}>"
           file.puts "#{peek}"
-        end
+        #end
         
   #<!---------------- String Literal -------------------------------------------!>
 
-        if peek == "\""
+        elsif peek == "\""
+          m=word.count "\""                                            #
+          n=word.scan(/\\\"/).count                                    #
+          if (m-n)%2 !=0                                               #
+            puts "Lexical Error:Line number #{line}: expected \" "     #
+            e=1                                                       # 
+          end                                                          #
           b=""
-          while(1)
+          while(e!=1)
             b=b+peek
             i=i+1
             peek=word[i]
@@ -144,11 +177,28 @@ def scanner(words,file)
           $LIT<<ob
           i=i+1
           next
-        end
+        #end
+  #<!----------------Panic Mode ------------------------------------------------!>
+
+        else
+          i=i+1
+        end  
+
 
       end
       i=i+1
     end
     line=line+1
+  end
+  if delim != 0                                                                         #
+    puts "Lexical Error: Line number #{line} :Unmatched Delimiters" ;
+    e=1
+  end
+  if paran != 0
+    puts "Lexical Error: Line number #{line} :Unmatched Paranthesis" ;
+    e=1
+  end
+  if e==1
+    exit
   end
 end

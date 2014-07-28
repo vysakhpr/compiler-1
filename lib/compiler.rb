@@ -18,7 +18,8 @@ module Compiler
   words=words.split("\n")
   scanner(words,file)
   file.close;
-
+  #p $NUM
+  #p $ID
   #---------------------------------------------SYNTACTIC ANALYSIS-----------------------------------------
   
   file = File.open("out.lex","r");
@@ -26,7 +27,8 @@ module Compiler
   file.close;
   words=words.split("\n").join(" ");
   words=words+" "
-  parser(words);
+  productions=parser(words);
+  puts productions
 
   #---------------------------------------------SEMANTIC ANALYSIS-------------------------------------------
 

@@ -209,6 +209,7 @@ def table(g, table_action_sym, table_goto_sym, gram_sym, start_sym)
 end
 
 def parse(word,term_sym,non_term_sym,g)
+  prod=[]
   word=word+"$"
   words=word.split(/[\s]/)
   len=words.length
@@ -247,7 +248,8 @@ def parse(word,term_sym,non_term_sym,g)
       t=st[l]
       l=l+1
       st[l]=$goto_table[t.to_i][non_term_sym.index(c)]
-      puts x
+      #puts x
+      prod<<x
     elsif d=="ac"
       puts "ACCEPTED"
       break
@@ -256,6 +258,7 @@ def parse(word,term_sym,non_term_sym,g)
       break 
     end
   end
+  return prod
 end
 
 
@@ -316,5 +319,5 @@ def parser(z)
   #end
   #print followof("S",term_sym,non_term_sym,g)
   table(g,term_sym,non_term_sym,gram_sym, start_sym)
-  parse(z,term_sym,non_term_sym,g)
+  return parse(z,term_sym,non_term_sym,g)
 end
