@@ -252,13 +252,93 @@ def parse(word,term_sym,non_term_sym,g)
       prod<<x
     elsif d=="ac"
       puts "ACCEPTED"
-      break
+      return prod
     else  
       puts "ERROR"
       break 
     end
   end
-  return prod
+  
+end
+
+
+
+def is_up?(word)
+    !(word =~ /^[A-Z]*$/).nil?
+end
+
+def parse_tree(input_dup)
+  tree=Array.new
+  stack=Array.new
+  val=""
+  id_finder=0
+  for i in 0..(input_dup.length-1)
+    inputvalue=input_dup[i]
+    dup_array=inputvalue.split("->")
+    id_finder=id_finder+1
+    value={:id=>id_finder,:data=>dup_array[0],:parent_id=>nil}
+    dup_inputvalue=dup_array[1]
+    j=dup_inputvalue.length-2
+    while j>=0
+      f=0
+      while dup_inputvalue[j]!=" "
+         val+=dup_inputvalue[j]
+               j=j-1
+         f=1
+      end
+          if f==1
+        j=j-1
+      end
+      val=val.reverse
+      if(!is_up?(val))  
+        id_finder=id_finder+1
+        tree.push(:id=>id_finder,:data=>val,:parent_id=>value[:id])   
+      else 
+         if h = stack.find { |h| h[:data]==val&&h[:parent_id]==nil}
+                v = stack.pop
+                if r=tree.find {|r| r==v }
+                  r[:parent_id]=value[:id]
+                end
+              else
+                print "ERROR"
+                exit
+             end
+        end
+          val=""
+    end
+    stack.push(value)
+    tree.push(value)
+  end
+
+  root = {:id => 0, :data => '', :parent_id => nil}
+  map = {}
+
+  tree.each do |e|
+    map[e[:id]] = e
+  end
+
+  @@tree = {}
+
+  tree.each do |e|
+    pid = e[:parent_id]
+    if pid == nil || !map.has_key?(pid)
+      (@@tree[root] ||= []) << e
+    else
+      (@@tree[map[pid]] ||= []) << e
+    end
+  end
+  def print_tree(item, level)
+    items = @@tree[item]
+    unless items == nil
+      indent = level > 0 ? sprintf("%#{level * 2}s", " ") : ""
+      items.each do |e|
+        puts "#{indent}-#{e[:data]}"
+        print_tree(e, level + 1)
+      end
+    end
+  end
+  print_tree(root, 0)
+  return tree
 end
 
 

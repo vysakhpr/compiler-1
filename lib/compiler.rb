@@ -28,7 +28,8 @@ module Compiler
   words=words.split("\n").join(" ");
   words=words+" "
   productions=parser(words);
-  puts productions
+  tree=parse_tree(productions);
+  
 
   #---------------------------------------------SEMANTIC ANALYSIS-------------------------------------------
 

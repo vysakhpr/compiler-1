@@ -1,5 +1,5 @@
 void main()
-  {
+	{ 
     int x,y;
     char z;
     y=x+30.5999;
