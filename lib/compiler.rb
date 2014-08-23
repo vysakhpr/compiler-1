@@ -38,8 +38,8 @@ module Compiler
   
 
   #---------------------------------------------SEMANTIC ANALYSIS-------------------------------------------
-  semantic(productions)
-  
+  intermediate_code=semantic(productions)
+  puts intermediate_code
 
 
 end
