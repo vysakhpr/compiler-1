@@ -1,13 +1,8 @@
 require_relative "compiler/version"
 require_relative "compiler/scanner"
 require_relative "compiler/parser"
-require_relative "compiler/semantic"
 
 module Compiler
-  if ARGV[0].nil?
-    puts "File not Specified";
-    exit;
-  end
   unless ARGV[0].end_with?(".c")
     puts "Incompatible File";
     exit;
@@ -23,8 +18,8 @@ module Compiler
   words=words.split("\n")
   scanner(words,file)
   file.close;
-  #p $NUM
-  #p $ID
+  p $NUM
+  p $ID
   #---------------------------------------------SYNTACTIC ANALYSIS-----------------------------------------
   
   file = File.open("out.lex","r");
@@ -33,12 +28,12 @@ module Compiler
   words=words.split("\n").join(" ");
   words=words+" "
   productions=parser(words);
-  #puts productions
+  puts productions
   #tree=parse_tree(productions);
   
 
   #---------------------------------------------SEMANTIC ANALYSIS-------------------------------------------
-  semantic(productions)
+
   
 
 

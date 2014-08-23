@@ -20,6 +20,14 @@ num
 id
 =
 num
+*
+id
+/
+(
+id
++
+id
+)
 ;
 printf
 (

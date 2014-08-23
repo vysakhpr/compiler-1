@@ -297,7 +297,9 @@ def parse_tree(input_dup)
          if h = stack.find { |h| h[:data]==val&&h[:parent_id]==nil}
                 v = stack.pop
                 if r=tree.find {|r| r==v }
+                  tree.delete(r)
                   r[:parent_id]=value[:id]
+                  tree.push(r)
                 end
               else
                 print "ERROR"
@@ -309,7 +311,7 @@ def parse_tree(input_dup)
     stack.push(value)
     tree.push(value)
   end
-
+  tree=tree.reverse
   root = {:id => 0, :data => '', :parent_id => nil}
   map = {}
 
@@ -337,7 +339,7 @@ def parse_tree(input_dup)
       end
     end
   end
-  print_tree(root, 0)
+  print_tree( root, 0)
   return tree
 end
 
@@ -360,30 +362,37 @@ def parser(z)
   #print x
   #print "\n"
   #end
-
+  #---------------------------------------A->B--&B->C---does'nt work-------------------------------------
   g=["S-> DATATYPE FNAME { STMTS } ",
      "STMTS-> STMT ; STMTS ",
      "STMTS-> STMT ; ",
      "STMT-> DATATYPE IDS ",
-     "STMT-> id = EXPR ",
+     "STMT-> ID = EXPR ",
      "STMT-> printf ( string , IDS ) ",
      "STMT-> printf ( string ) ",
-     "EXPR-> EXPR + TERM ","EXPR-> TERM ","TERM-> TERM * FACTOR ","TERM-> FACTOR ","FACTOR-> ( EXPR ) ","FACTOR-> id ","FACTOR-> num ", 
-     "IDS-> id , IDS ",
-     "IDS-> id ",
+     "EXPR-> EXPR + TERM ",
+     "EXPR-> EXPR - TERM ",
+     "EXPR-> TERM ",
+     "EXPR-> EXPR / TERM ",
+     "TERM-> TERM * FACTOR ",
+     "TERM-> FACTOR ",
+     "FACTOR-> ( EXPR ) ",
+     "FACTOR-> id ",
+     "FACTOR-> num ", 
+     "IDS-> ID , IDS ",
+     "IDS-> id ", 
      "DATATYPE-> int ",
      "DATATYPE-> void ",
      "DATATYPE-> char ",
      "FNAME-> NAME ( ) ",
-      "NAME-> main "]
-  gram_sym=["S","DATATYPE","EXPR","TERM","FACTOR", "FNAME","NAME","STMT", "IDS" ,"STMTS","id","num","int","char","void","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon"]
-  term_sym=["id","num","int","void","char","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon"]
-  non_term_sym=["S","DATATYPE","EXPR","TERM","FACTOR" ,"FNAME","NAME","STMT","IDS","STMTS"]
+     "NAME-> main ",
+     "ID-> id "]
+     $GRAM_SYM=g
+  gram_sym=["S","ID","DATATYPE","EXPR","TERM","FACTOR", "FNAME","NAME","STMT", "IDS" ,"STMTS","id","num","int","char","void","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
+  term_sym=["id","num","int","void","char","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
+  non_term_sym=["S","DATATYPE","EXPR","TERM","FACTOR" ,"FNAME","NAME","STMT","IDS","STMTS","ID"]
   start_sym="S"
   
-
-  
-
   #g=["S-> S + T ","S-> T ","T-> T * F ","T-> F ","F-> ( S ) ","F-> id "]
   #gram_sym=["S","T","F","id","+","*","(",")","$","epsilon"]
   #term_sym=["id","+","*","(",")","$","epsilon"]

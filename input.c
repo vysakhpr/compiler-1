@@ -2,7 +2,7 @@ void main()
 	{ 
     int x,y;
     char z;
-    y=x+30.5999;
-    z=50;
-    printf("HAHAHA HAHAHA");
+    y=x+30;
+    x=50*y/(x+y);
+    printf("HAHAHA");
   }

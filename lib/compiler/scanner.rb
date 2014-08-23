@@ -2,14 +2,36 @@ class Identifier
   @lexeme=""
   @type=""
   @line=""
+  @counter=0
   def initialize(lexeme,line)
     @lexeme=lexeme
     @line="#{line}/"
+    @type=""
+    @counter=0;
   end
   def pos(line)
     @line=@line+line.to_s+"/"
   end
+  def lex_value
+    @lexeme
+  end
+  def type_assign(type)
+    @type=type
+  end
+  def type_value
+    @type
+  end
+  def inc_count
+    @counter=@counter+1
+  end
+  def line_value
+    @line
+  end
+  def counter_value
+    @counter
+  end
 end
+
 class Number
   @value=nil
   @type=""
@@ -19,13 +41,32 @@ class Number
     @type=type
     @line=line
   end
+  def num_value
+    @value
+  end
+  def type_value
+    @type
+  end
+  def line_value 
+    @line
+  end
+  def value
+    @value
+  end
 end
+
 class Literal
   @value=nil
   @line=nil
   def initialize(value,line)
     @value=value
     @line=line
+  end
+  def lit_value
+    @value
+  end
+  def line_value
+    @line
   end
 end
 def scanner(words,file)
@@ -119,6 +160,7 @@ def scanner(words,file)
             keyword=["int","float","char","double","long","short","signed","unsigned","void","main","printf"];
           if keyword.include?(b)
             #file.puts "token <#{b}>"
+            #indent=b
             file.puts "#{b}"
           else
             if lexem_id[b].nil?
