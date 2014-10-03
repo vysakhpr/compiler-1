@@ -373,7 +373,7 @@ def parser(z)
      "EXPR-> EXPR + TERM ",
      "EXPR-> EXPR - TERM ",
      "EXPR-> TERM ",
-     "EXPR-> EXPR / TERM ",
+     "TERM-> TERM / FACTOR ",
      "TERM-> TERM * FACTOR ",
      "TERM-> FACTOR ",
      "FACTOR-> ( EXPR ) ",
@@ -382,14 +382,15 @@ def parser(z)
      "IDS-> ID , IDS ",
      "IDS-> id ", 
      "DATATYPE-> int ",
+     "DATATYPE-> float ",
      "DATATYPE-> void ",
      "DATATYPE-> char ",
      "FNAME-> NAME ( ) ",
      "NAME-> main ",
      "ID-> id "]
      $GRAM_SYM=g
-  gram_sym=["S","ID","DATATYPE","EXPR","TERM","FACTOR", "FNAME","NAME","STMT", "IDS" ,"STMTS","id","num","int","char","void","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
-  term_sym=["id","num","int","void","char","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
+  gram_sym=["S","ID","DATATYPE","EXPR","TERM","FACTOR", "FNAME","NAME","STMT", "IDS" ,"STMTS","id","num","int","char","float","void","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
+  term_sym=["id","num","int","void","char","float","main","printf","string","+","*","=","{","}","(",")",";",",","$","epsilon","-","/"]
   non_term_sym=["S","DATATYPE","EXPR","TERM","FACTOR" ,"FNAME","NAME","STMT","IDS","STMTS","ID"]
   start_sym="S"
   

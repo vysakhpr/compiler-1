@@ -1,7 +1,9 @@
 require_relative "compiler/version"
+require_relative "compiler/symbol_tables"
 require_relative "compiler/scanner"
 require_relative "compiler/parser"
-require_relative "compiler/semantic"
+require_relative "compiler/semantic_analyzer"
+require_relative "compiler/intermediate_code"
 
 module Compiler
   if ARGV[0].nil?
@@ -13,33 +15,33 @@ module Compiler
     exit;
   end
 
-  #---------------------------------------------LEXICAL ANALYSIS-------------------------------------------
+  #---------------------------------------------LEXICAL-ANALYSIS-------------------------------------------
   
   mode = "r";
   file = File.open("#{ARGV[0]}", mode);
   words= file.read;
   file.close;
-  file = File.open("out.lex","w");
   words=words.split("\n")
-  scanner(words,file)
-  file.close;
+  tokens=scanner(words)
+  #p token
   #p $NUM
   #p $ID
-  #---------------------------------------------SYNTACTIC ANALYSIS-----------------------------------------
+  #---------------------------------------------SYNTACTIC-ANALYSIS-----------------------------------------
   
-  file = File.open("out.lex","r");
-  words= file.read;  
-  file.close;
-  words=words.split("\n").join(" ");
-  words=words+" "
-  productions=parser(words);
+  tokens=tokens.split("\n").join(" ");
+  tokens=tokens+" "
+  productions=parser(tokens);
   #puts productions
   #tree=parse_tree(productions);
-  
 
-  #---------------------------------------------SEMANTIC ANALYSIS-------------------------------------------
-  intermediate_code=semantic(productions)
+  #---------------------------------------------SEMANTIC-ANALYSIS-------------------------------------------
+  semantic(productions)
+  #----------------------------------------INTERMEDIATE-CODE-GENERATION-------------------------------------
+  intermediate_code=intergen(productions)
   puts intermediate_code
+  #---------------------------------------------CODE OPTIMIZATION-------------------------------------------
 
+  #----------------------------------------------CODE GENERATION--------------------------------------------
+  
 
 end

@@ -1,78 +1,5 @@
-class Identifier
-  @lexeme=""
-  @type=""
-  @line=""
-  @counter=0
-  def initialize(lexeme,line)
-    @lexeme=lexeme
-    @line="#{line}/"
-    @type=""
-    @counter=0;
-  end
-  def pos(line)
-    @line=@line+line.to_s+"/"
-  end
-  def lex_value
-    @lexeme
-  end
-  def type_assign(type)
-    @type=type
-  end
-  def type_value
-    @type
-  end
-  def inc_count
-    @counter=@counter+1
-  end
-  def line_value
-    @line
-  end
-  def counter_value
-    @counter
-  end
-end
-
-class Number
-  @value=nil
-  @type=""
-  @line=nil
-  def initialize(value,type,line)
-    @value=value
-    @type=type
-    @line=line
-  end
-  def num_value
-    @value
-  end
-  def type_value
-    @type
-  end
-  def line_value 
-    @line
-  end
-  def value
-    @value
-  end
-end
-
-class Literal
-  @value=nil
-  @line=nil
-  def initialize(value,line)
-    @value=value
-    @line=line
-  end
-  def lit_value
-    @value
-  end
-  def line_value
-    @line
-  end
-end
-def scanner(words,file)
-  $ID=[];
-  $NUM=[];
-  $LIT=[];
+def scanner(words)
+  token=""
   delim=0                                                                 #
   paran=0 
   e=0  
@@ -139,12 +66,11 @@ def scanner(words,file)
               x=x+(peek.to_f/d);
               d=d*10
             end
-            ob=Number.new(x,"float",line)
+            ob=Number.new(x,"%f",line)
           else
-            ob=Number.new(v,"int",line)          
+            ob=Number.new(v,"%d",line)          
           end
-          #file.puts "token <num,#{ob}>"
-          file.puts "num"
+          token=token+"num\n"
           $NUM<<ob
           next
         #end
@@ -159,9 +85,8 @@ def scanner(words,file)
           end while !(peek=~/^[A-Za-z0-9]$/).nil? 
             keyword=["int","float","char","double","long","short","signed","unsigned","void","main","printf"];
           if keyword.include?(b)
-            #file.puts "token <#{b}>"
-            #indent=b
-            file.puts "#{b}"
+            #indent=b          
+            token=token+"#{b}\n"
           else
             if lexem_id[b].nil?
               ob=Identifier.new(b,line)
@@ -171,8 +96,7 @@ def scanner(words,file)
               ob.pos(line)
              end 
             $ID<<ob
-            #file.puts "token <id,#{ob}>"
-            file.puts "id"
+            token=token+"id\n"
           end
           next
         #end
@@ -188,8 +112,7 @@ def scanner(words,file)
           elsif peek==")"
             paran=paran-1
           end
-          #file.puts "token <#{peek}>"
-          file.puts "#{peek}"
+          token=token+"#{peek}\n"
         #end
         
   #<!---------------- String Literal -------------------------------------------!>
@@ -214,8 +137,7 @@ def scanner(words,file)
             end
           end
           ob=Literal.new(b,line)
-          #file.puts "token <lit,#{ob}>"
-          file.puts "string"
+          token=token+"string\n"
           $LIT<<ob
           i=i+1
           next
@@ -243,4 +165,5 @@ def scanner(words,file)
   if e==1
     exit
   end
+  return token
 end
